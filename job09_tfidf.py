@@ -14,5 +14,5 @@ Tfidf_matrix = Tfidf.fit_transform(df_reviews['cleaned_sentences'])
 
 with open('./models/snack.pickle', 'wb') as f:
     pickle.dump(Tfidf, f)
-mmwrite('./models/snakc.mtx', Tfidf_matrix)
+mmwrite('./models/snack.mtx', Tfidf_matrix)
 print('end')

@@ -122,6 +122,7 @@ class Exam(QWidget, form_window):
             print(category)
             if category == self.product[i]:
                 name = path[2]
+                print('debug')
                 self.df_reviews = pd.read_csv(name)
                 print('debug')
                 self.embedding_model = Word2Vec.load(path[idx+3])
