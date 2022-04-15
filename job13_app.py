@@ -26,7 +26,8 @@ class Exam(QWidget, form_window):
         super().__init__()
         self.setupUi(self)
         self.product_lbl.setText("JNK's Choice")
-        self.product_box.addItem('카테고리를 선택하세요')
+        self.product_box.addItems(['카테고리를 선택하세요'])
+        # self.product_box.clear()
         self.data_paths = [glob.glob('./models/*')[0:4],glob.glob('./models/*')[4:8],glob.glob('./models/*')[8:12],glob.glob('./models/*')[12:16],glob.glob('./models/*')[16:20],glob.glob('./models/*')[20:44]]
         self.product = ['카테고리','음료','냉동식품', '건강식품','가공식품','과자', '커피, 차']
         self.pixmap = QPixmap()
@@ -135,8 +136,9 @@ class Exam(QWidget, form_window):
         self.pro_list = list(self.df_reviews['product'])
         print(self.pro_list)
         # self.product_box.clear()
-        for title in self.pro_list:
-            self.product_box.addItem(title)
+        # print('debug')
+        self.product_box.addItems(self.pro_list)
+
         self.product_lbl.setText(category)
         self.rand = random.randint(0, len(self.pro_list))
         self.label1(self.rand)
@@ -255,6 +257,10 @@ class Exam(QWidget, form_window):
         return product_url, img, product_name
 
 
+    def delete(self):
+        # delete items of list
+        self.product_box.clear()
+        self.product_box.addItems(self.pro_list)
 
 
 
