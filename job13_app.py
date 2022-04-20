@@ -1,20 +1,15 @@
 import pandas as pd
 from sklearn.metrics.pairwise import linear_kernel
+import requests
+from bs4 import BeautifulSoup
 from scipy.io import mmread, mmwrite
 import pickle
 from gensim.models import Word2Vec
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
-from PyQt5.QtCore import QCoreApplication
-from PyQt5.QtGui import QPixmap, QImage
-from tensorflow.keras.models import load_model
-from bs4 import BeautifulSoup
-import requests
+from PyQt5.QtGui import QPixmap
 import urllib.request
-from urllib import request
-from PIL import Image
-import numpy as np
 import random
 import webbrowser
 import glob
@@ -27,7 +22,7 @@ class Exam(QWidget, form_window):
         self.setupUi(self)
         self.product_lbl.setText("JNK's Choice")
         self.product_box.addItems(['카테고리를 선택하세요'])
-        # self.product_box.clear()
+        self.product_box.clear()
         self.data_paths = [glob.glob('./models/*')[0:4],glob.glob('./models/*')[4:8],glob.glob('./models/*')[8:12],glob.glob('./models/*')[12:16],glob.glob('./models/*')[16:20],glob.glob('./models/*')[20:44]]
         self.product = ['카테고리','음료','냉동식품', '건강식품','가공식품','과자', '커피, 차']
         self.pixmap = QPixmap()
@@ -38,6 +33,7 @@ class Exam(QWidget, form_window):
         self.category_box.currentIndexChanged.connect(self.category_box_slot)
         self.product_box.currentIndexChanged.connect(self.product_box_slot)
         self.btn_recommend.clicked.connect(self.btn_recommend_slot)
+        self.product_box.clear()
 
 
     def btn_recommend_slot(self):
@@ -108,7 +104,7 @@ class Exam(QWidget, form_window):
         simScore = list(enumerate(cosine_sim[-1]))
         simScore = sorted(simScore, key=lambda x: x[1],
                           reverse=True)
-        simScore = simScore[1:11]
+        simScore = simScore[1:4]
         movieidx = [i[0] for i in simScore]
         recMovieList = self.df_reviews.iloc[movieidx]
         return recMovieList.iloc[:, 0]
@@ -135,7 +131,7 @@ class Exam(QWidget, form_window):
 
         self.pro_list = list(self.df_reviews['product'])
         print(self.pro_list)
-        # self.product_box.clear()
+        self.product_box.clear()
         # print('debug')
         self.product_box.addItems(self.pro_list)
 
@@ -207,26 +203,26 @@ class Exam(QWidget, form_window):
 
 
     def product_search(self, num):
-        # headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'}
-        # url = f'https://www.coupang.com/np/search?q={self.pro_list[num]}&channel=recent'
-        # try:
-        #     res = requests.get(url, headers=headers, timeout=3)
-        # except:
-        #     print('error')
-        #     # self.warning_word.setText('인터넷 접속이 불안정합니다!!\n다시 접속해 주세요 ')
-        #     return
-        # print('debug01')
-        # soup = BeautifulSoup(res.text, 'html.parser')
-        # print(soup)
-        # img_url = soup.find("img", {"class": "search-product-wrap-img"})['src']
-        # print('debug03')
-        # product_url = soup.find('a', {'class': 'search-product-link'})['href']
-        # print('debug04')
-        # product_name = soup.find('div', {'class': 'name'}).get_text()
-        img_url = 'thumbnail6.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2020/04/28/11/5/0fa77540-d4d2-4b73-8236-256c1874911f.jpg'
-        product_url = 'vp/products/1519330646?itemId=2607093811&vendorItemId=70598215704&sourceType=CATEGORY&categoryId=225361&isAddedCart='
-        product_name = '햇살닭 저염훈제닭가슴살 플러스 (냉동)'
-        URL = 'https://'+img_url
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'}
+        url = f'https://www.coupang.com/np/search?q={self.pro_list[num]}&channel=recent'
+        try:
+            res = requests.get(url, headers=headers, timeout=5)
+        except:
+            print('error')
+            # self.warning_word.setText('인터넷 접속이 불안정합니다!!\n다시 접속해 주세요 ')
+            return
+        print('debug01')
+        soup = BeautifulSoup(res.text, 'html.parser')
+        print(soup)
+        img_url = soup.find("img", {"class": "search-product-wrap-img"})['src']
+        print('debug03')
+        product_url = soup.find('a', {'class': 'search-product-link'})['href']
+        print('debug04')
+        product_name = soup.find('div', {'class': 'name'}).get_text()
+        # img_url = 'thumbnail6.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2020/04/28/11/5/0fa77540-d4d2-4b73-8236-256c1874911f.jpg'
+        # product_url = 'vp/products/1519330646?itemId=2607093811&vendorItemId=70598215704&sourceType=CATEGORY&categoryId=225361&isAddedCart='
+        # product_name = '햇살닭 저염훈제닭가슴살 플러스 (냉동)'
+        URL = 'https:'+img_url
         print(URL)
         img = urllib.request.urlopen(URL).read()
         print('debug01')
@@ -234,24 +230,27 @@ class Exam(QWidget, form_window):
 
     def product_search2(self, a):
         print('product_search2')
-        # headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'}
-        # self.rand = random.randint(0, len(self.pro_list))
-        # url = f'https://www.coupang.com/np/search?q={a}&channel=recent'
-        # print(url)
-        # try:
-        #     res = requests.get(url, headers=headers, timeout=3)
-        # except:
-        #     print('error')
-        #     # self.warning_word.setText('인터넷 접속이 불안정합니다!!\n다시 접속해 주세요 ')
-        #     return
-        # soup = BeautifulSoup(res.text, 'html.parser')
-        # img_url = soup.find("img", {"class": "search-product-wrap-img"})['src']
-        # product_url = soup.find('a', {'class': 'search-product-link'})['href']
-        # product_name = soup.find('div', {'class': 'name'}).get_text()
-        img_url = 'thumbnail6.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2020/04/28/11/5/0fa77540-d4d2-4b73-8236-256c1874911f.jpg'
-        product_url = 'vp/products/1519330646?itemId=2607093811&vendorItemId=70598215704&sourceType=CATEGORY&categoryId=225361&isAddedCart='
-        product_name = '햇살닭 저염훈제닭가슴살 플러스 (냉동)'
-        URL = 'https://'+img_url
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'}
+        self.rand = random.randint(0, len(self.pro_list))
+        url = f'https://www.coupang.com/np/search?q={a}&channel=recent'
+        print(url)
+        try:
+            res = requests.get(url, headers=headers, timeout=5)
+        except:
+            print('error')
+            # self.warning_word.setText('인터넷 접속이 불안정합니다!!\n다시 접속해 주세요 ')
+            return
+        soup = BeautifulSoup(res.text, 'html.parser')
+        img_url = soup.find("img", {"class": "search-product-wrap-img"})['src']
+        print(img_url)
+        product_url = soup.find('a', {'class': 'search-product-link'})['href']
+        print(product_url)
+        product_name = soup.find('div', {'class': 'name'}).get_text()
+        print(product_name)
+        # img_url = 'thumbnail6.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2020/04/28/11/5/0fa77540-d4d2-4b73-8236-256c1874911f.jpg'
+        # product_url = 'vp/products/1519330646?itemId=2607093811&vendorItemId=70598215704&sourceType=CATEGORY&categoryId=225361&isAddedCart='
+        # product_name = '햇살닭 저염훈제닭가슴살 플러스 (냉동)'
+        URL = 'https:'+img_url
         img = urllib.request.urlopen(URL).read()
         print(product_name)
         return product_url, img, product_name
