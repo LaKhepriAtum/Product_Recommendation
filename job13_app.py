@@ -1,7 +1,5 @@
 import pandas as pd
 from sklearn.metrics.pairwise import linear_kernel
-import requests
-from bs4 import BeautifulSoup
 from scipy.io import mmread, mmwrite
 import pickle
 from gensim.models import Word2Vec
@@ -13,7 +11,6 @@ import urllib.request
 import webbrowser
 import glob
 import random
-import time
 from selenium import webdriver
 
 
@@ -105,8 +102,12 @@ class Exam(QWidget, form_window):
     def product_box_slot(self):
         product = self.product_box.currentText()
         print('product_box_slot')
-        print(product)
-        self.product_lbl.setText(product[18:])
+        print(self.pro_list)
+        print(len(product))
+        if len(product)==0:
+            product = self.pro_list[random.randint(0, len(self.pro_list))]
+        self.product_lbl.setText(product)
+
         recommendation_titles = self.recommend_by_product_title(product)
         recommendation_titles_list= recommendation_titles.tolist()
         print('수찬')
@@ -118,7 +119,6 @@ class Exam(QWidget, form_window):
     def recommend_by_product_title(self, product):
         movie_idx = self.df_reviews[self.df_reviews['product'] == product].index[0]
         cosine_sim = linear_kernel(self.Tfidf_matrix[movie_idx], self.Tfidf_matrix)
-        print(cosine_sim)
         recommendation_titles = self.getRecommendation(cosine_sim)
         print(recommendation_titles)
         return recommendation_titles[:3]
@@ -172,6 +172,7 @@ class Exam(QWidget, form_window):
         self.pixmap.loadFromData(img)
         self.img_lbl_1.setPixmap(self.pixmap.scaledToHeight(230))
         print(product_name)
+        print('label1')
         self.prod_lbl_1.setText(product_name)
         self.buy_btn_1.setText('구매하기')
         self.buy_btn_1.clicked.connect(lambda: webbrowser.open(product_url))
@@ -197,6 +198,7 @@ class Exam(QWidget, form_window):
 
     def label4(self, a):
         product_url, img, product_name = self.product_search2(a)
+        print('label4')
         self.pixmap.loadFromData(img)
         self.img_lbl_1.setPixmap(self.pixmap.scaledToHeight(230))
         self.prod_lbl_1.setText(product_name)

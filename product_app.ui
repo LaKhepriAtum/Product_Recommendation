@@ -23,8 +23,8 @@
     <rect>
      <x>80</x>
      <y>100</y>
-     <width>171</width>
-     <height>21</height>
+     <width>181</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
@@ -36,7 +36,7 @@
   <widget class="QLabel" name="product_lbl">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>130</x>
      <y>40</y>
      <width>941</width>
      <height>41</height>
@@ -244,7 +244,7 @@
      <x>290</x>
      <y>100</y>
      <width>641</width>
-     <height>61</height>
+     <height>71</height>
     </rect>
    </property>
   </widget>
@@ -253,8 +253,8 @@
     <rect>
      <x>950</x>
      <y>130</y>
-     <width>81</width>
-     <height>31</height>
+     <width>91</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="font">
@@ -270,9 +270,9 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>130</y>
-     <width>171</width>
-     <height>21</height>
+     <y>140</y>
+     <width>181</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="font">
