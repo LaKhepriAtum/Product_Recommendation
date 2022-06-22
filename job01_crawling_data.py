@@ -2,8 +2,6 @@ from bs4 import BeautifulSoup
 import requests
 import re
 import pandas as pd
-# from selenium import webdriver
-# from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 import time
 
 headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'}
@@ -34,8 +32,7 @@ for i in range(1, 18):
         product = soup.find("h2", {"class": "prod-buy-header__title"})
         print(product)
         product_name.append(product.get_text())
-        # except:
-        #     continue
+
 
 df = pd.DataFrame({'product_name':product_name})
 df.to_csv('./crawling_data/product_name.csv', encoding='utf-8-sig', index=False)
