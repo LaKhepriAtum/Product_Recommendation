@@ -24,7 +24,9 @@ embedding_model = Word2Vec.load('./models/freeze_word2vexModel.model')
 print(embedding_model.wv.index_to_key) # dict의 key는 단어 이름, vocab의 키 보기
 print(len(embedding_model.wv.index_to_key)) # 최소 20번 이상 나오는 단어의 개수
 
-key_word = '운동'
+key_word = '혼밥'
+
+
 sim_word = embedding_model.wv.most_similar(key_word, topn = 20)# 여름 근처에 있는 단어
 print(sim_word)
 

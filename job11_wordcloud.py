@@ -13,7 +13,7 @@ font_name = font_manager.FontProperties(
 mpl.rcParams['axes.unicode_minus']=False
 rc('font', family=font_name)
 
-df = pd.read_csv('crawling_data/drink_onesentence.csv')
+df = pd.read_csv('./crawling_data(drink)/drink_onesentence.csv')
 print(df.head())
 
 words = df.iloc[105, 1]
